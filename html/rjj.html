@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App de Libras</title>
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e0e5ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Simulando a tela de um celular */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 800px;
+            max-height: 100vh;
+            background-color: #F5F9FF;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- CONTEÚDO DAS TELAS --- */
+        .screen {
+            flex: 1;
+            padding: 40px 20px 80px 20px; /* Espaço extra embaixo para a barra de navegação */
+            overflow-y: auto;
+            display: none; /* Esconde todas as telas por padrão */
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block; /* Mostra apenas a tela ativa */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tipografia */
+        h1 {
+            font-size: 24px;
+            color: #1A5276;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: #5D6D7E;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #FFF;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #34495E;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Botões */
+        .btn-primary {
+            background-color: #3498DB;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980B9;
+        }
+
+        /* --- BARRA DE NAVEGAÇÃO INFERIOR --- */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #FFF;
+            height: 70px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #EAECEE;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #95A5A6;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #3498DB;
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        /* Estilos extras para os botões do quiz */
+        .btn-quiz {
+            border: 1px solid #BDC3C7; 
+            background: #FFF; 
+            padding: 10px; 
+            width: 100%; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div id="historia" class="screen active">
+            <h1>Bem-vindo!</h1>
+            <h2>Conheça a Comunidade Surda</h2>
+            
+            <div class="card">
+                <div style="margin-bottom: 15px; border-radius: 10px; overflow: hidden; display: flex; justify-content: center;">
+                    <img src="data:image/jpeg;base64,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" alt="Inclusão Social na Comunidade Surda" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;">
+                </div>
+                
+                <p>No Brasil, mais de 10 milhões de pessoas têm alguma deficiência auditiva...</p>
+                <p>Este aplicativo foi criado para ajudar a comunidade surda e seus familiares a se conectarem e aprenderem Libras de forma fácil e acessível.</p>
+            </div>
+            
+            <button class="btn-primary" onclick="mudarAba('aprender')">Continuar</button>
+        </div>
+
+        <div id="aprender" class="screen">
+            <h1>Olá, Ana!</h1>
+            <h2>Vamos começar a aprender Libras!</h2>
+            
+            <div class="card" style="background-color: #EBF5FB;">
+                <h3 style="color: #2980B9;">Saudações</h3>
+                <p style="margin-top: 5px;">Aula 1 - Oi </p>
+
+                <iframe 
+                    width="100%" 
+                    height="200"
+                    src="https://www.youtube.com/embed/kAKIgMEmMas"
+                    frameborder="0" 
+                    allowfullscreen
+                    style="border-radius: 10px; margin-top: 10px;">
+                </iframe>
+
+                <p style="margin-top: 10px;">
+                    Assista ao vídeo e pratique 🤟
+                </p>
+            </div>
+            
+            <div class="card" style="text-align: left; background-color: #EBF5FB;">
+                <h3 style="color: #2980B9;">Alfabeto</h3>
+                <p style="margin-top: 5px;">Aula - Alfabeto Completo</p>
+
+                <div style="margin-top: 10px; border-radius: 10px; overflow: hidden;">
+                    <iframe width="100%" height="180" 
+                    src="https://www.youtube.com/embed/lan4BHFIAA4" 
+                    title="Alfabeto em Libras" 
+                    frameborder="0" 
+                    allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <div id="quizzes" class="screen">
+            <h1 style="text-align: center;">Quizzes</h1>
+            <h2 style="text-align: center;">Teste seu conhecimento</h2>
+            
+            <div class="card">
+                <p style="font-weight: bold;">Pergunta 1: Que letra esse sinal representa?</p>
+                
+                <div style="background-color: #FEF9E7; height: 150px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
+                    <img src="https://pt.quizur.com/_image?href=https%3A%2F%2Fimg.quizur.com%2Ff%2Fimg64a6b3010a0909.50293233.jpg%3FlastEdited%3D1688646405&w=400&h=400&f=webp" 
+                         alt="Letra A em Libras" 
+                         style="max-height: 100%; max-width: 100%; border-radius: 10px;">
+                </div>
+                
+                <button class="btn-quiz" onclick="verificarResposta('A', this, 'A', 'msg-quiz-1')">A</button>
+                <button class="btn-quiz" onclick="verificarResposta('B', this, 'A', 'msg-quiz-1')">B</button>
+                <button class="btn-quiz" onclick="verificarResposta('C', this, 'A', 'msg-quiz-1')">C</button>
+                
+                <p id="msg-quiz-1" style="margin-top: 15px; font-weight: bold; font-size: 16px;"></p>
+            </div>
+
+            <div class="card">
+                <p style="font-weight: bold;">Pergunta 2: E este sinal, representa qual letra?</p>
+                
+                <div style="background-color: #E8F8F5; height: 150px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALkAAAERCAMAAAAQS/ZZAAAAnFBMVEX///8AAADy8vL///709PT39/f8/Pzw8PD5+fnj4uH6+vj39/Xt7e3c29q6ubjw8O7Ew8IIAACwr63R0M5WU1GVk5F2dXPb2tiko6HBwL5wbmydnJvLysl8eXddW1mOjIs1MjBmY2JIRUMfGhiioJ6GhYNFQT8qJSNPTEo+OjirqqkVDgqRj44xLCpzb25hX10dFRQcFA8kIR5YUFBIl3bpAAAT60lEQVR4nO1diZKiTLMl2QRFVNBWccMF13ac8b7/u91MilVFClDp748+ETOtiHJIsnKjKhGEX/ziF7/4xS9+8Ytf/C9AkqS6KZSHPu1O2826WRRGywMGd2bXzaUQxgCzqW7o9nGJ7D29bj7cGMHeCF9LUyS/Twv+x46BIzip963jX3C98c+XfPeGuL9tRUq/mlk/mb4O/cfbu5M50d96486HKXEArbjknsTsHYzpYo/sd95U+xwrTsxgmLNHU7dI+H2z9RFCvDBhJHAwkoaDK8C8+35CvJjCyXdAe8808vbVJ2uAxc/Q+eEBTv2BZR29fQ/gOpvmOX8bbf0yT7s+gA2czJCrpFsXUuaJ/WS8IjrfGCEcaw5vPHBunGN74pLq9Hb7pXccZuiFNN4CTN5PLxsD+H6wtTk0R5PZ/OBr//x7+nD06n9gX5/Yu+AJLCLxBX8Xn8tDc0H8D95YTn9Ce5qwqiuY6cCKY6/WcEOO6PDdvv3EehAyfAZLyLWCAdT2EdmfbkPfBVgvJ8UDr9hxm9M/GH9NU9sOUIdpPz4cnU+hmTvYRmE7Knkbvl5Ligc2LMt8zfwLM0lQw7dfuRHPy9EBV83f6wGkBZzj4WGUO/8qcLlH5x2GJ4gTvQHcmZz3YgnT/J2yIB/ib8sfFvoGBg+2hp5Itidf/YPrbueeNYyCmsSO6iGW9AQ+mezZlLxlVLTsmR+3bC+O03dZ9aV7lwtp13UYErQ+6Y5ap38ZEUebikVLqx0NXnloUfVlNbkRrA7z8OXog+al//hYw8WVikX3H+jkQHeenTxdK3Jj44zs+w3YPIhPO5aDidF8THoRq1H8qmNiGnraL+KsaQ7+vvRzYL6ZcQAd9vEboiaaXzvUiFn3eS4qoiZh1tRbfY0o89D9QY7fnx3m/z4TM16hkXinf5+RtWPyGAhjhunefk6n6VHYw6z6cq4/tFQvxwzG8ZvxCuBSoIYljs6+4K84UqQD05L+Ek/iA4FXNxEj2Vs4WPKTnR9BH1tmWzqhKRz6oifmHZi9lOQjqP/WkU7O4G/p2skA8IwvJ1iJwvxCb9/ujpwo5JDdKtppQ5eE7rkw/MIBr77dHXVhEbwy1lDlxoQMI4Hk0NnD9iSRO3qv0NWTG+hKa9erdCjV9wk6CuICRLr5ZqHP/ECJyO8rBqcGc6Eesu7DUXh34DWINNtLmsYyCLRD6vVJClNSH68iuyfw4Bq8GnMcptlp650sr9qBC3thosClLZ2GB28rUDsQjslhfoxkrNgNxt1lYt+7dn0X6YaDr8TrtYn6865q3Rx6DtNxvXdVsvfzo6w2wGYN4/HRuVLYm673K98Q2yW5dwhi3uXuLbxbLqyDzHMI66e+WqKCxk72goytNV2sMdH4tn1nKw9HGDQuEz9gw2kw/oKF6Jv4l6N9Oi18C0yBtZsTZHTmmFtugt196FafVGf9j/4/D9JWpE23YfDk/p0ur6ZNI3Kn7w7+Sw+WORVYjLctHHk3kUjLtr49b2DZ5/tapNZBbzo9+NbxtdjAXpozXXGYE82Op7su9I1gDD/MVG0K2ZIf0OsZNL03+KIZHmvBDPgyRy72CtaorQ04Z5WRJPQ537dnbsNyD39ewTUJtY/mymSi/npeAx1v4R+F3KqbSj7SkFDhbrxBa/cPXl/VxZBwHN5iXiRH3S1amx2cTV+Yl5xsfgDz5I0keQu9RemKWRbkHWUvuxMZ8LtRlwQmmfNp+PJ5RizRhJJNpDDjE0zLlSifHsR3do4vQyMukdzDg1lo63iq050lZdyG2GhvDnB4R6zlV1YspiRuLzuwGMVZxpTPRrTDCUirirFbFiGTXLNfs1w8ySQSyakOK85JOFK7a5rT96TOHeIs7f6S62k/CQ8TFRhxvW79gOlDfjHBwRxCIl3J3m8PUQFg9dHKbBaapAMmabCEepOtK4M4zXCqlNVfhymyNfx6M+pN9rCbxnpkw+YjzPIwQwXZMkVYQsYcBAnPbRvp9QZeb5jLYHfBGMNXhCHK8n7YsS2rxA2j7f5upzogwUQPrJ17zrxFMUtodqfe6RMRDBi7rBR3zB6eoyRZ60cYFrLSW8a4lX37bJqKTbfbt5PiQlBqlTC2zXJ0OiStYLum+Qd3sMH1/7YztVe89pJZ7wzqd54+ZkEBzs2qJkgrsBIyN95ZpSoCOwhWB5nDcw5DO/Hhdy0zPu6hrs/+Xz1zHscXsjZja/IzRC5RUMsyMreX4Ra/SZlGcTHwI/d6ONAOMjcvS1cmO3Kds2gMDKN7AjXjwHxQNyszO3r+5/2oLDV/S22tOCbMZhiQEYgoOotawruxqPDwI5a0GEFQ6/aeFG0F0ikKyCSqyJ5+RrDVZ6PNyZsFMQrjxK9e7yO3kfMwZm58lOvNL4fwC/0fkQxpJz9yGubWTRpBXCD25oMfkVN8+0qi5E+wMgNtWkLnVNc81SR0Zsr3h9w9L8yaY/BiV71X9xL0T2TfFqfcW2U6y5d1OArO6QesU2TDc8zhy1mIJfVGTwLhD0LtUXVN58jLVKZVjkn68nx5wkcwoUClueNIKNmctzbtOf4BCajhJ5Yzjjq8dIptj11p3sVr4FBlSH/u8xmSE2r1T81+y4YdDLV8Q9FJZhxS/SN0dc3fh8FJzYXe1jABPoUxd93hpvY5y3db78WZt9TTXKepWk9uI34CT6pwCZC3dFJTisj+1+f9kU7zNOdaaC1hqDVJbxDWVRL/aoGDRE5oyPcrOqRnReB3BqdKR6+GBu8KGeV6PzNHrzOB9nhd+MO7WJeKk8gloz2ddqfDEnfRuWpUpEsXTNzudWpabOZ+8gc0e/J16AU3dmHtWAWrCB7wzQ12Mmx+v5TQ1bG3RbonZ2CN7eHQ7lreFWBRZMzqnGvJMme4tIvHLvqGJkktR3baGbQ9OBWYx/nFNV1QnWd72e9ia6PakwPAfvLQg+guf/Cpsxu2eXACwT7cc8sfAhijFcDcyjzV5rO5PWn0n0ykSODpKPankXDko/rxgtLOpk3oPJuSkoTFp6TD5/UgHfp5vHXLQSvibnINMF8kgtLimyro5dwJ0k+unq1zza53RtYc/QwIJ671dA7n4Lo+rwdJQmOVNdVLNB2AXrAGRooWfWfDAw5C42czyxIYcrj4bziQRkmpxegadTDoLR7MLc4GT26rrXmWkAskBo7iYbsPByu5X4tWzrmToovjNI4MkTtgufIt5aTGFX8CZdZMfHMoTJtweh4ASkHNluc62tyVZp06RLizkflFE4hLrmtY5VqNw1XlY/5VpNKsW18URC2KFmIifzDc5d0FGfFG1lLhG55G+VUk9hxOOS7G4J6CbH5urfW0D9fcKgSvKReEvVuNDjfMPZytXPWdcppyujjFJraXSIt9HTddOHOEIhJ3hYVlHm8v7x93sOIadxPuOFj6QAcKbXOKJlTnwIjnZYuyLEYZvSziW/xPjJe7W2XHpyYSOOxpa9KDJa8gneieih/HaywTlePjKI3wbNyylUMx8f8TSKMeOG1efbSj4amo8e83Un0FNDHYtWw9hY9591yo09U2muMRpP2KFkg/Adk/qf1aaylKmbu1PMyH/URbFw5YsRxj5vINu0CDMHFWVbXommdCPnPdgXWhWXfaKa6QaEr4+8EhFBpWtJFdggazQWXuwOUx1zEqmxS4mNJN5xTfisiary8Iw/+jNbRgsOpsKL+eefsPwIDntlQCNwVQhZmuwLqEMtCCF2bv6fGf4Rlzajc6KLwsdPbwLjNjflfrGGx913x3fNT9R7+tavHmTOaSuYL1qPhy1puODErgL5i0leT1Q4+kOQufuSEm3YqM7kohh5Vir/qblWhzkjk7ij+A9MEJtqXuRS4hZbbZL8uhnsuxFVHpLP4k8z1/S9JfyYlrlDgPWbxhLocC0cZzAKfc3d/hTYzoMyWrF1xWNWLg89ynqsa+zUmdeCPcuZGUv/8uZh7GEvasB+6m7OzGeS9dpI6YyxEjmZEj5npq2Rkxb9zod/D+doDg5og5I25QI5cK3Zfbt8F2xDzJSaOohZibKYVE5vcRVOMRcYoqQub0u83pYr67mFXmB85vk+GYuSAmhqfWIHXV+jZLnAyKH0U5dKx4WaKBSN8NBokQDWNS7IA59ZoZzfuzY7VFiXciTzInBxR/QKKSILCWoW1jf1VDTZypGIpca4Sb/d9h+xqt7qy/POpl4ockHLjtM5VkTgePwxekM1zeME9bfSZ1TWE2J9ocGB//O+3N5f+8qVrKlSXxoLtOmjnZlshcyMJinGau+eetRGcfmFQ5cR7JX1bGs/9DcZOtqUgc3eed57plLoTmmHidW2nmspp4I4RSFtPXJcR00+97foqmVl5323xQ8nnAPBSRou+FG+YJvvF7Me3n/UReHLngRHcnlIKh1R02Dyqgj5iH+jAxb5nfyDygfCfzKQawczPhxOSK1HcPbsHEzNV48AZn4rZumLMzSg1iIdbzYKOB4u4tdIGR1V9BnVLKuzw14YmUSPKMoTEXbpiraXVhSqDKbOAyW991qP9c/J1G45a6Kt/at1wsTw/y64h5IzLI4Yja0PBiAg65BgMgMP+BaQltnqy2vwGu3200UBFzMbQroa43FFUTi3FvPmzpFDIPLryIcWow4gT/hgYTv2poKmlTMADQ7CvoRtluUSYozlDcY984qom4RU1JPTyfIswfL8sLmMdDVAvlYX/HO5AuyCS1UPhxCuGTID72ZdmNtVmMI65I6nJsCwq51Mcl2YC5du/k+s3w0DGbe5/ClABjsVHfS9BBpY9tZSR1OZJLEeYZJdlQW9Sb8BV1NhjOMVefRfoUw4s1nM+T9QctViFBSEq9jMxHj+vlYU6UynUoWo8S3PicAhYJ6xm+3sA1UdBU/VgssC1CiroSjWpuiP/ch9tlH0w/cXwy+4ahqpyYEyeLfpErFLfS8HejvJNtMPrgaPRtfy8liH/ZL8vhybB3Ip2sKhax7vOsWxSqmszjNarmshg11XOVNsc1OpXy5OitFfampM1yLM70L6vhW00sNDxN/PGC1XvO3TtzuFQNvp/h77vWK1lvaB2TxKj07bW7a0t3CqJBqqOGR15Ckzn0lzyYVuAa8c28eAT0QOR10IEyLW2oVO8RWSFg0O9ZaCfwA/pMQ8eq+q7Wd1Oaxrb6f1R/VOB/asPQDH7TYlboqSs3FA3/KeRDqVZt0HXQMNWU7N15gyEAfoif0YnIMg1wzRAVHOSigjZIVkRNMRSyXoqIJgVNjdgwGgY389W5NHEqO6AWGBqqiEG6omqK0sLr3V7ulmPBwK2yZmgykUFehmAYdFXwShmYWxmi1qBTwEDHwLzboPIBXhTugMuoMogo/pLVBlppusb4H8m+KVuHwwb9FUa4KEZZ9MtfJFENmYn+YCB3JlL1o6E0VDx7zcCLV9AKHaus9yW/go4JLbUfuqJH1URluj/MDNkImKPQWfmQXobMKfhF/QiY4wXQ5UbS2nOhSgsEFFoDFVlFRfYdJ56E1p4dtm3kj74J5WhQ2EPM0QzJqFV4HoqIytHAMWCgtBuawgq/htAwit1xalVprqKgZHGYUTVD8L2Tpi+uaxO3K2JTpTGJYmRVGuIX+Hi/Sq2gWsu6ouiUS+B7OrNi2lJwzu89VD9mYYFXYwEwaQZbA5DSPP4ajZCGH++UWov5/YqVyiy8amG65t3VbBQxW33ZWC2J+avWn4gDAJ5VXi/Di5rpGSjvr0/yFtTq3Y9wYOoexH3aPgT9BWusbQf1+6Py9o9adRqWah7g36SGfgRVV5/aV9iy6OGz64apCWaVI7Y86L2/u/ojSLkzsJ9+e4TjsqYVQ5LwVXqVVdPqgdPxta2GBeaS4JRsXqyj31miHVyehZqYL13ePRPoUHNh9vSsa03NfJB5UecvDWm5Tz9YUSXXtdSZX+YERR8PaJFS/xjlInZdC+P5mKstfWoO/GeZwHbRTUZ+R55lD+/A0xGqNtpTa+L1z2zN3d++d2xria8SZu67KWYAreLfzA+NqWkdR6Pj0TK7tv7Yv9e2uryaJ0KcXt/imw+SMKjEXK6xm8+oUjJn1Nhzw6LKeWmx25zrXt8Bu1LqP67LKAqUE1XpVHJ8zyMbuNCp5L4XdbY4q/Swqz91dq2qVLWY19n2cVXlgm/rbCvnVKj7C+e6XChhUcUV/auzEZFVpfDfq7NjZaXWU7U2ITSqGPR62ydWaWhbL3O3QouVepk76/LfrZf5qEKk2quV+bRCdrCutY+vUaFpFs8y2feBp2tBFlb1tpM/lH+42KXeRr5O+XZfX/U2N5+UTyYX9bYhNMvfKrI+9rTph6hgFsfuC3kUx7A8c7vOjnhUuChdcjHqfVZFp3z0Idf7/AGptBOVhHp7+UoVcgu33s7svbIZvCQs6+3le+ZteXILSRjU60RXZUMuSejW64pK19ior+xLmRSFU7auKdEa0Trhcbb+ewS3VrM4qFAUdWrN544VJv4da20UPuZuEn4PvVbjMqwyzGodopVM2+Ftz4LnQKVY1avzKQTNKsyntQ5Rrna+GWi+4YHq/CjWRvgGuS1l34leFUe4qMuLksTcKvf+23VV6Ih5v5J9qPOJcstKOVmdycVXpbDJrDFcXFTKJls15qKTaoOsbBr7AljVjt0ttRzoJehW8+Dqx/rO3qHN9xiC7O+/hkYJ6BVN8sfXtcRH/iGPJy2O1k94lm051P3UqfL4CQ9uLIf/rszrWc30CvxnbYvwI55mWwq1P4uvNI4/4XG2pWAWbt/1U9D9zzK3q7bbqw1GfcslKkL7z2rLL37xi1/84he/+MUvfvG/gv8Hh3rvK5Li3VoAAAAASUVORK5CYII=" 
+                         alt="Letra C em Libras" 
+                         style="max-height: 90%; max-width: 100%; border-radius: 10px;">
+                </div>
+                
+                <button class="btn-quiz" onclick="verificarResposta('A', this, 'C', 'msg-quiz-2')">F</button>
+                <button class="btn-quiz" onclick="verificarResposta('B', this, 'C', 'msg-quiz-2')">G</button>
+                <button class="btn-quiz" onclick="verificarResposta('C', this, 'C', 'msg-quiz-2')">C</button>
+                
+                <p id="msg-quiz-2" style="margin-top: 15px; font-weight: bold; font-size: 16px;"></p>
+            </div>
+            
+            <div style="height: 20px;"></div> </div>
+
+        <div id="chat" class="screen">
+            <h1>Chat</h1>
+            <h2>Conecte-se com pessoas</h2>
+            
+            <div class="card" style="text-align: left;">
+                <p><strong>Lais</strong> - 16:35<br>Oi! Vamos conversar?</p>
+                <hr style="border: 0; border-top: 1px solid #EEE; margin: 10px 0;">
+                <p><strong>Carlos</strong> - 12:50<br>Tudo bem, Ana?</p>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="mudarAba('historia')" id="tab-historia">
+                <span class="nav-icon">📖</span>
+                <span>História</span>
+            </div>
+            <div class="nav-item" onclick="mudarAba('aprender')" id="tab-aprender">
+                <span class="nav-icon">🤟</span>
+                <span>Aprender</span>
+            </div>
+            <div class="nav-item" onclick="mudarAba('quizzes')" id="tab-quizzes">
+                <span class="nav-icon">📋</span>
+                <span>Quizzes</span>
+            </div>
+            <div class="nav-item" onclick="mudarAba('chat')" id="tab-chat">
+                <span class="nav-icon">💬</span>
+                <span>Chat</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função de navegação
+        function mudarAba(idTela) {
+            const telas = document.querySelectorAll('.screen');
+            telas.forEach(tela => {
+                tela.classList.remove('active');
+            });
+
+            document.getElementById(idTela).classList.add('active');
+
+            const abas = document.querySelectorAll('.nav-item');
+            abas.forEach(aba => {
+                aba.classList.remove('active');
+            });
+
+            document.getElementById('tab-' + idTela).classList.add('active');
+        }
+
+        // Função do Quiz Atualizada para aceitar múltiplas perguntas
+        function verificarResposta(respostaEscolhida, botaoClicado, respostaCorreta, idMensagem) {
+            // Pega o parágrafo de mensagem específico deste quiz
+            const mensagem = document.getElementById(idMensagem);
+            
+            // Pega o "card" (container) onde este botão está, para limpar apenas as cores deste quiz específico
+            const cardPai = botaoClicado.parentElement;
+            const todosBotoesDesteQuiz = cardPai.querySelectorAll('.btn-quiz');
+            
+            // Reseta todos os botões DESTE quiz para o estilo original
+            todosBotoesDesteQuiz.forEach(btn => {
+                btn.style.backgroundColor = '#FFF';
+                btn.style.borderColor = '#BDC3C7';
+            });
+
+            if (respostaEscolhida === respostaCorreta) {
+                // Acertou
+                mensagem.style.color = '#27AE60'; // Verde
+                mensagem.innerText = 'Correto! 🎉 Parabéns!';
+                botaoClicado.style.backgroundColor = '#D5F5E3';
+                botaoClicado.style.borderColor = '#27AE60';
+            } else {
+                // Errou
+                mensagem.style.color = '#E74C3C'; // Vermelho
+                mensagem.innerText = 'Ops, incorreto! Tente novamente.';
+                botaoClicado.style.backgroundColor = '#FADBD8';
+                botaoClicado.style.borderColor = '#E74C3C';
+            }
+        }
+    </script>
+    
+</body>
+</html>
