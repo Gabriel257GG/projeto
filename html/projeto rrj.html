@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -167,8 +168,8 @@
 
         /* --- ESTILOS DO CHAT (TIPO WHATSAPP) --- */
         .chat-bg {
-            background-color: #e5ddd5;
-            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+            background-color: #e5ddd5; /* Cor de fundo clássica do Whats */
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png"); /* Textura sutil */
             padding: 15px;
             border-radius: 15px;
             display: flex;
@@ -199,24 +200,24 @@
             line-height: 1.4;
             color: #111;
             text-align: left;
-            word-wrap: break-word;
         }
 
+        /* Bolha de quem envia para você */
         .bubble.received {
             background-color: #FFFFFF;
-            border-top-left-radius: 0;
+            border-top-left-radius: 0; /* Biquinho do balão */
         }
 
+        /* Bolha que você envia */
         .bubble.sent {
-            background-color: #DCF8C6;
-            border-top-right-radius: 0;
+            background-color: #DCF8C6; /* Verde do Whats */
+            border-top-right-radius: 0; /* Biquinho do balão */
         }
 
         .bubble-name {
             font-size: 12px;
             font-weight: bold;
             margin-bottom: 2px;
-            color: #E67E22;
         }
 
         .bubble-time {
@@ -232,17 +233,19 @@
 
     <div class="app-container">
         
-        <div id="cadastro" class="screen active">
+      <div id="cadastro" class="screen active">
             <div style="margin-top: 40px; text-align: center;">
                 <span style="font-size: 60px;">👋</span>
                 <h1 style="margin-top: 10px;">Bem-vindo(a)!</h1>
                 <h2>Crie seu perfil para começar</h2>
             </div>
-            
             <div class="card" style="margin-top: 20px;">
                 <p style="font-weight: bold; text-align: left; margin-bottom: 5px;">Qual é o seu nome?</p>
                 <input type="text" id="input-nome" class="input-text" placeholder="Digite seu nome aqui...">
                 
+                <p style="font-weight: bold; text-align: left; margin-bottom: 5px;">Qual é o seu e-mail?</p>
+                <input type="email" id="input-email" class="input-text" placeholder="exemplo@email.com">
+
                 <button class="btn-primary" onclick="cadastrarEEntrar()">Entrar no App</button>
             </div>
         </div>
@@ -253,11 +256,14 @@
             
             <div class="card">
                 <div style="margin-bottom: 15px; border-radius: 10px; overflow: hidden; display: flex; justify-content: center;">
-                    <img src="https://www.handtalk.me/br/wp-content/uploads/sites/8/2022/07/capa-blogpost-cultura-surda-1.png" alt="Inclusão Social na Comunidade Surda" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;">
+                    <img src="https://imagens.mdig.com.br/thbs/58379mn.jpg" alt="Inclusão Social na Comunidade Surda" style="width: 100%; height: auto; object-fit: cover; border-radius: 10px;">
                 </div>
                 
                 <p>No Brasil, mais de 10 milhões de pessoas têm alguma deficiência auditiva...</p>
-                <p>A falta de comunicação ainda exclui pessoas surdas todos os dias. A Libras, essencial para essa comunidade, ainda é pouco conhecida. Por isso, este aplicativo conecta pessoas, ensina Libras e promove inclusão.</p>
+                <p>A falta de comunicação ainda exclui pessoas surdas todos os dias.
+A Libras, essencial para essa comunidade, ainda é pouco conhecida.
+Por isso, este aplicativo conecta pessoas, ensina Libras e promove inclusão.
+Comunicar é um direito, não um privilégio</p>
             </div>
             
             <button class="btn-primary" onclick="mudarAba('aprender')">Continuar</button>
@@ -279,6 +285,10 @@
                     allowfullscreen
                     style="border-radius: 10px; margin-top: 10px;">
                 </iframe>
+
+                <p style="margin-top: 10px;">
+                    Assista ao vídeo e pratique 🤟
+                </p>
             </div>
             
             <div class="card" style="text-align: left; background-color: #EBF5FB;">
@@ -302,25 +312,36 @@
             
             <div class="card">
                 <p style="font-weight: bold;">Pergunta 1: Que letra esse sinal representa?</p>
+                
                 <div style="background-color: #FEF9E7; height: 150px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
-                    <img src="https://pt.quizur.com/_image?href=https%3A%2F%2Fimg.quizur.com%2Ff%2Fimg64a6b3010a0909.50293233.jpg%3FlastEdited%3D1688646405&w=400&h=400&f=webp" alt="Letra A em Libras" style="max-height: 100%; max-width: 100%; border-radius: 10px;">
+                    <img src="https://pt.quizur.com/_image?href=https%3A%2F%2Fimg.quizur.com%2Ff%2Fimg64a6b3010a0909.50293233.jpg%3FlastEdited%3D1688646405&w=400&h=400&f=webp" 
+                         alt="Letra A em Libras" 
+                         style="max-height: 100%; max-width: 100%; border-radius: 10px;">
                 </div>
+                
                 <button class="btn-quiz" onclick="verificarResposta('A', this, 'A', 'msg-quiz-1')">A</button>
                 <button class="btn-quiz" onclick="verificarResposta('B', this, 'A', 'msg-quiz-1')">B</button>
                 <button class="btn-quiz" onclick="verificarResposta('C', this, 'A', 'msg-quiz-1')">C</button>
+                
                 <p id="msg-quiz-1" style="margin-top: 15px; font-weight: bold; font-size: 16px;"></p>
             </div>
 
             <div class="card">
                 <p style="font-weight: bold;">Pergunta 2: E este sinal, representa qual letra?</p>
+                
                 <div style="background-color: #E8F8F5; height: 150px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Sign_language_C.svg/400px-Sign_language_C.svg.png" alt="Letra C em Libras" style="max-height: 90%; max-width: 100%; border-radius: 10px;">
+                    <img src="data:image/png;base64,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" 
+                         alt="Letra C em Libras" 
+                         style="max-height: 90%; max-width: 100%; border-radius: 10px;">
                 </div>
+                
                 <button class="btn-quiz" onclick="verificarResposta('A', this, 'C', 'msg-quiz-2')">F</button>
                 <button class="btn-quiz" onclick="verificarResposta('B', this, 'C', 'msg-quiz-2')">G</button>
                 <button class="btn-quiz" onclick="verificarResposta('C', this, 'C', 'msg-quiz-2')">C</button>
+                
                 <p id="msg-quiz-2" style="margin-top: 15px; font-weight: bold; font-size: 16px;"></p>
             </div>
+            
             <div style="height: 20px;"></div> 
         </div>
 
@@ -331,6 +352,23 @@
             <div class="card" style="padding: 10px; height: 480px; display: flex; flex-direction: column; background-color: #FFF;">
                 
                 <div id="chat-mensagens" class="chat-bg" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
+                    
+                    <div class="message-row received">
+                        <div class="bubble received">
+                            <div class="bubble-name" style="color: #3498DB;">Lais</div>
+                            <div>Oi! Vamos praticar os sinais da Aula 1?</div>
+                            <span class="bubble-time">16:35</span>
+                        </div>
+                    </div>
+
+                    <div class="message-row received">
+                        <div class="bubble received">
+                            <div class="bubble-name" style="color: #E67E22;">Carlos</div>
+                            <div>Tudo bem por aí? Já fizeram o quiz?</div>
+                            <span class="bubble-time">16:36</span>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div style="display: flex; gap: 8px;">
@@ -356,7 +394,7 @@
             </div>
             <div class="nav-item" onclick="mudarAba('aprender')" id="tab-aprender">
                 <span class="nav-icon">🤟</span>
-                <span>Aprender</span>
+                <span>Apreder</span>
             </div>
             <div class="nav-item" onclick="mudarAba('quizzes')" id="tab-quizzes">
                 <span class="nav-icon">📋</span>
@@ -370,35 +408,21 @@
 
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+   
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 
     <script>
-        // =========================================================
-        // ATENÇÃO: COLOQUE SUAS CHAVES REAIS DO FIREBASE AQUI
-        // =========================================================
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY_AQUI",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
-            projectId: "SEU_PROJETO"
-        };
-
-        // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        let nomeAtual = "";
-
-        // --- NAVEGAÇÃO E CADASTRO ---
-        function cadastrarEEntrar() {
+       function cadastrarEEntrar() {
             const nomeDigitado = document.getElementById("input-nome").value.trim();
+            const emailDigitado = document.getElementById("input-email").value.trim();
 
-            if (nomeDigitado === "") {
-                alert("Por favor, digite seu nome para começar!");
+            if (nomeDigitado === "" || emailDigitado === "") {
+                alert("Por favor, preencha seu nome e seu e-mail para começar!");
                 return;
             }
-
-            nomeAtual = nomeDigitado;
+            
             document.getElementById("nome-usuario").innerText = "Olá, " + nomeDigitado + "!";
             document.getElementById("cadastro").classList.remove("active");
             document.getElementById("menu-inferior").style.display = "flex";
@@ -408,15 +432,20 @@
 
         function mudarAba(idTela) {
             const telas = document.querySelectorAll('.screen');
-            telas.forEach(tela => tela.classList.remove('active'));
+            telas.forEach(tela => {
+                tela.classList.remove('active');
+            });
+
             document.getElementById(idTela).classList.add('active');
 
             const abas = document.querySelectorAll('.nav-item');
-            abas.forEach(aba => aba.classList.remove('active'));
+            abas.forEach(aba => {
+                aba.classList.remove('active');
+            });
+
             document.getElementById('tab-' + idTela).classList.add('active');
         }
 
-        // --- LÓGICA DO QUIZ ---
         function verificarResposta(respostaEscolhida, botaoClicado, respostaCorreta, idMensagem) {
             const mensagem = document.getElementById(idMensagem);
             const cardPai = botaoClicado.parentElement;
@@ -440,63 +469,69 @@
             }
         }
 
-        // --- LÓGICA DO CHAT (TEMPO REAL) ---
         function enviarMensagem() {
             const input = document.getElementById("input-chat");
+            const mensagens = document.getElementById("chat-mensagens");
             const texto = input.value.trim();
 
             if (texto === "") return;
 
+            // Pega a hora atual do seu computador para colocar na mensagem
             const dataAtual = new Date();
             const horaFormatada = dataAtual.getHours().toString().padStart(2, '0') + ":" + dataAtual.getMinutes().toString().padStart(2, '0');
 
-            // Envia os dados para o banco de dados do Firebase
-            db.ref("mensagens").push({
-                nome: nomeAtual,
-                texto: texto,
-                hora: horaFormatada
-            });
+            // Cria a estrutura HTML da nova bolha de mensagem enviada
+            const novaMensagemHTML = `
+                <div class="message-row sent">
+                    <div class="bubble sent">
+                        <div>${texto}</div>
+                        <span class="bubble-time">${horaFormatada}</span>
+                    </div>
+                </div>
+            `;
 
+            // Adiciona a mensagem ao chat
+            mensagens.innerHTML += novaMensagemHTML;
+
+            // Limpa o campo de texto
             input.value = "";
-        }
 
-        // Fica "escutando" o banco de dados. Sempre que uma mensagem nova chegar, ele roda essa função
-        db.ref("mensagens").on("child_added", function(snapshot) {
-            const mensagem = snapshot.val(); // Pega os dados da mensagem
-            const divMensagens = document.getElementById("chat-mensagens");
-            
-            let htmlNovaMensagem = "";
+            // Faz a rolagem descer para a última mensagem enviada
+            mensagens.scrollTop = mensagens.scrollHeight;
+         }
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  databaseURL: "https://SEU_PROJETO.firebaseio.com",
+  projectId: "SEU_PROJETO",
+};
 
-            // Verifica se o nome da mensagem é igual ao seu nome
-            if (mensagem.nome === nomeAtual) {
-                // Bolha Verde (Enviada por você)
-                htmlNovaMensagem = `
-                    <div class="message-row sent">
-                        <div class="bubble sent">
-                            <div>${mensagem.texto}</div>
-                            <span class="bubble-time">${mensagem.hora}</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                // Bolha Branca (Recebida da outra pessoa)
-                htmlNovaMensagem = `
-                    <div class="message-row received">
-                        <div class="bubble received">
-                            <div class="bubble-name">${mensagem.nome}</div>
-                            <div>${mensagem.texto}</div>
-                            <span class="bubble-time">${mensagem.hora}</span>
-                        </div>
-                    </div>
-                `;
-            }
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-            // Adiciona a bolha na tela
-            divMensagens.innerHTML += htmlNovaMensagem;
-            // Rola a tela do chat para baixo automaticamente
-            divMensagens.scrollTop = divMensagens.scrollHeight;
-        });
+let nomeAtual = "";
+
+function cadastrarEEntrar() {
+    const nomeDigitado = document.getElementById("input-nome").value.trim();
+
+    if (nomeDigitado === "") {
+        alert("Por favor, digite seu nome para começar!");
+        return;
+    }
+
+    nomeAtual = nomeDigitado;
+
+    document.getElementById("nome-usuario").innerText = "Olá, " + nomeDigitado + "!";
+    document.getElementById("cadastro").classList.remove("active");
+    document.getElementById("menu-inferior").style.display = "flex";
+    document.getElementById("historia").classList.add("active");
+    document.getElementById("tab-historia").classList.add("active");
+}
+        
+
 
     </script>
+
+
 </body>
 </html>
